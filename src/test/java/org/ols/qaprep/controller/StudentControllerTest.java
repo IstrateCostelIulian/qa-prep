@@ -32,12 +32,12 @@ public class StudentControllerTest {
         Student student1 = new Student();
         student1.setId(1L);
         student1.setName("Alice");
-        student1.setPresent(true);
+        student1.setPresent(1);
 
         Student student2 = new Student();
         student2.setId(2L);
         student2.setName("Bob");
-        student2.setPresent(false);
+        student2.setPresent(3);
 
         when(studentService.getAllStudents()).thenReturn(Arrays.asList(student1, student2));
 
@@ -48,9 +48,9 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("Alice"))
-                .andExpect(jsonPath("$[0].present").value(true))
+                .andExpect(jsonPath("$[0].present").value(1))
                 .andExpect(jsonPath("$[1].name").value("Bob"))
-                .andExpect(jsonPath("$[1].present").value(false));
+                .andExpect(jsonPath("$[1].present").value(3));
 
         verify(studentService, times(1)).getAllStudents();
     }

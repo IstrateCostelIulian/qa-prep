@@ -35,11 +35,11 @@ public class StudentServiceIntegrationTest {
     public void setUp() {
         Student student1 = new Student();
         student1.setName("Alice");
-        student1.setPresent(true);
+        student1.setPresent(1);
 
         Student student2 = new Student();
         student2.setName("Bob");
-        student2.setPresent(false);
+        student2.setPresent(2);
 
         studentRepository.save(student1);
         studentRepository.save(student2);
