@@ -27,12 +27,14 @@ public class StudentService {
         if (optStudent.isPresent()) {
 
         }
-        return studentRepository.save(student);
+        Student result = studentRepository.save(student);
+        System.out.println("Service : " + result);
+        return result;
     }
 
     public void updateStudent(Long id, Student student) {
         student.setId(id);
-        student.setPresent(updatePresence(student.getPresent()));
+        student.setNoOfPresence(updatePresence(student.getNoOfPresence()));
         studentRepository.save(student);
     }
 

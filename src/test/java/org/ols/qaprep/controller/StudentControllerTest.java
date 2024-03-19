@@ -1,5 +1,7 @@
 package org.ols.qaprep.controller;
 
+import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,18 +29,22 @@ public class StudentControllerTest {
     @InjectMocks
     private StudentController studentController;
 
+    @BeforeEach
+    public void setup() {
+    }
+
     @Test
     public void testGetAllStudents() throws Exception {
         // Arrange
         Student student1 = new Student();
         student1.setId(1L);
         student1.setName("Alice");
-        student1.setPresent(1);
+        student1.setNoOfPresence(1);
 
         Student student2 = new Student();
         student2.setId(2L);
         student2.setName("Bob");
-        student2.setPresent(3);
+        student2.setNoOfPresence(0);
 
         when(studentService.getAllStudents()).thenReturn(Arrays.asList(student1, student2));
 
@@ -48,12 +55,48 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("Alice"))
-                .andExpect(jsonPath("$[0].present").value(1))
+                .andExpect(jsonPath("$[0].noOfPresence").value(1))
                 .andExpect(jsonPath("$[1].name").value("Bob"))
-                .andExpect(jsonPath("$[1].present").value(3));
+                .andExpect(jsonPath("$[1].noOfPresence").value(0));
 
         verify(studentService, times(1)).getAllStudents();
     }
 
+    @Test
+    public void testPostStudent() throws Exception {
+        Student student = new Student();
+        student.setId(1L);
+        student.setName("Alice");
+        student.setNoOfPresence(1);
+
+        when(studentService.createStudent(student)).thenReturn(student);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(studentController).build();
+
+        mockMvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON)
+                        .content(this.getStudentBodyAsJsonStrHelper(student)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("Alice"))
+                .andExpect(jsonPath("$.noOfPresence").value(1))
+        ;
+        verify(studentService, times(1)).createStudent(any());
+    }
+
     // Write similar test methods for other API endpoints
+
+    // Write InvalidRequest test methods for other API endpoints
+
+    private String getStudentBodyAsJsonHelper(Student student) {
+        return new Gson().toJson(student);
+    }
+
+    private String getStudentBodyAsJsonStrHelper(Student student) {
+        return "{\"id\":" + student.getId() + "," +
+                "\"name\":\"" + student.getName() + "\"," +
+                "\"noOfPresence\": \"" + student.getNoOfPresence() + "\"" +
+                " }";
+    }
+
+
 }
