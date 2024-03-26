@@ -22,10 +22,10 @@ public class StudentControllerSteps {
     private MockMvc mockMvc;
     private ResultActions resultActions;
 
-    @Given("I have a new student with name {string} and presences number {string}")
-    public void i_have_a_new_student_with_name_and_present_status(String name, String presenceNo) throws Exception {
+    @Given("I have a new student with name {string}")
+    public void i_have_a_new_student_with_name_and_present_status(String name) throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(studentController).build();
-        String requestBody = "{\"name\": \"" + name + "\", \"noOfPresence\": " + presenceNo + "}";
+        String requestBody = "{\"name\": \"" + name + "\"}";
         resultActions = mockMvc.perform(post("/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));

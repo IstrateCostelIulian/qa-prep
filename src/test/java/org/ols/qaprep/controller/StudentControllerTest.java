@@ -37,12 +37,10 @@ public class StudentControllerTest {
     public void testGetAllStudents() throws Exception {
         // Arrange
         Student student1 = new Student();
-        student1.setId(1L);
         student1.setName("Alice");
-        student1.setNoOfPresence(1);
+        student1.setNoOfPresence(0);
 
         Student student2 = new Student();
-        student2.setId(2L);
         student2.setName("Bob");
         student2.setNoOfPresence(0);
 
@@ -55,7 +53,7 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("Alice"))
-                .andExpect(jsonPath("$[0].noOfPresence").value(1))
+                .andExpect(jsonPath("$[0].noOfPresence").value(0))
                 .andExpect(jsonPath("$[1].name").value("Bob"))
                 .andExpect(jsonPath("$[1].noOfPresence").value(0));
 
@@ -65,9 +63,8 @@ public class StudentControllerTest {
     @Test
     public void testPostStudent() throws Exception {
         Student student = new Student();
-        student.setId(1L);
         student.setName("Alice");
-        student.setNoOfPresence(1);
+        student.setNoOfPresence(0);
 
         when(studentService.createStudent(student)).thenReturn(student);
 
@@ -78,7 +75,7 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("Alice"))
-                .andExpect(jsonPath("$.noOfPresence").value(1))
+                .andExpect(jsonPath("$.noOfPresence").value(0))
         ;
         verify(studentService, times(1)).createStudent(any());
     }

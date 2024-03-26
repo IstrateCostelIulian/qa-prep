@@ -3,6 +3,7 @@ package org.ols.qaprep.controller;
 import org.ols.qaprep.entity.Student;
 import org.ols.qaprep.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class StudentController {
 
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
-
+        student.setNoOfPresence(0);
         return studentService.createStudent(student);
     }
 
@@ -35,6 +36,12 @@ public class StudentController {
     public void updateStudent(@PathVariable Long id, @RequestBody Student student) {
         studentService.updateStudent(id, student);
     }
+
+    @PutMapping()
+    public void updateStudentByName(@Param("name") String name) {
+        studentService.updateStudentPresence(name);
+    }
+
 
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
